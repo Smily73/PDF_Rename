@@ -22,7 +22,7 @@ namespace PDFRename.ViewModels
             
             // Remove .pdf extension for editing
             FileName = currentFileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase) 
-                ? currentFileName.Substring(0, currentFileName.Length - 4) 
+                ? currentFileName[..^4] 
                 : currentFileName;
         }
 

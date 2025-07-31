@@ -4,7 +4,12 @@
         xmlns:models="clr-namespace:PDFRename.Models"
         xmlns:local="clr-namespace:PDFRename"
         Title="PDF Rename" Height="700" Width="1000"
-        MinHeight="500" MinWidth="800">
+        MinHeight="500" MinWidth="800"
+        Icon="AppIcon.ico"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResize"
+        Padding="0"
+        Margin="0">
 
     <Window.Resources>
         <local:ProcessingModeConverter x:Key="ProcessingModeConverter"/>
@@ -84,13 +89,13 @@
 
         <!-- Main Content -->
         <Grid Grid.Row="1" Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <!-- Controls -->
-            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <!-- Controls -->
+                <Grid Grid.Row="0" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="250"/>
@@ -132,6 +137,12 @@
                         Command="{Binding ClearListCommand}"
                         Style="{StaticResource SecondaryButtonStyle}"
                         Margin="0,0,10,0"/>
+                
+                <Button Grid.Column="5"
+                        Content="⚙️ Optionen"
+                        Command="{Binding ShowOptionsCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Margin="0,0,0,0"/>
             </Grid>
 
             <!-- File List -->

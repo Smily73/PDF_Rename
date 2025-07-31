@@ -1,0 +1,238 @@
+<Window x:Class="PDFRename.Views.OptionsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:PDFRename.Models"
+        Title="Optionen" Height="600" Width="700"
+        MinHeight="500" MinWidth="600"
+        WindowStartupLocation="CenterOwner"
+        Icon="../AppIcon.ico">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource PrimaryBrush}" 
+                Padding="15,10"
+                Margin="0,0,0,20"
+                CornerRadius="4">
+            <TextBlock Text="Umbenennungs-Optionen"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="White"/>
+        </Border>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Margin="0,0,0,20">
+            
+            <!-- Wort-Ersetzungen Tab -->
+            <TabItem Header="Wort-Ersetzungen">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Beschreibung -->
+                    <TextBlock Grid.Row="0" 
+                               Text="Definieren Sie Wortpaare für die automatische Ersetzung in Dateinamen:"
+                               Margin="0,0,0,10"
+                               TextWrapping="Wrap"/>
+
+                    <!-- Liste der Ersetzungen -->
+                    <GroupBox Grid.Row="1" 
+                              Header="Ersetzungsregeln"
+                              Style="{StaticResource BootstrapGroupBoxStyle}"
+                              Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- DataGrid für Ersetzungen -->
+                            <DataGrid Grid.Column="0"
+                                      ItemsSource="{Binding Options.WordReplacements}"
+                                      SelectedValue="{Binding SelectedReplacement}"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      CanUserDeleteRows="False"
+                                      GridLinesVisibility="Horizontal"
+                                      HeadersVisibility="Column"
+                                      Margin="0,0,10,0">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Von" 
+                                                        Binding="{Binding From, UpdateSourceTrigger=PropertyChanged}"
+                                                        Width="*"/>
+                                    <DataGridTextColumn Header="Nach" 
+                                                        Binding="{Binding To, UpdateSourceTrigger=PropertyChanged}"
+                                                        Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- Buttons -->
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <Button Content="Hinzufügen"
+                                        Command="{Binding AddReplacementCommand}"
+                                        Style="{StaticResource SuccessButtonStyle}"
+                                        Width="100"
+                                        Margin="0,0,0,5"/>
+                                <Button Content="Entfernen"
+                                        Command="{Binding RemoveReplacementCommand}"
+                                        CommandParameter="{Binding SelectedReplacement}"
+                                        Style="{StaticResource DangerButtonStyle}"
+                                        Width="100"
+                                        Margin="0,0,0,10"/>
+                                <Button Content="↑ Nach oben"
+                                        Command="{Binding MoveReplacementUpCommand}"
+                                        CommandParameter="{Binding SelectedReplacement}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Width="100"
+                                        Margin="0,0,0,5"/>
+                                <Button Content="↓ Nach unten"
+                                        Command="{Binding MoveReplacementDownCommand}"
+                                        CommandParameter="{Binding SelectedReplacement}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Width="100"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- Reset Button -->
+                    <Button Grid.Row="2"
+                            Content="Auf Standard zurücksetzen"
+                            Command="{Binding ResetToDefaultsCommand}"
+                            Style="{StaticResource WarningButtonStyle}"
+                            HorizontalAlignment="Left"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Prefix-Einstellungen Tab -->
+            <TabItem Header="Prefix-Einstellungen">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Aktivierung -->
+                    <CheckBox Grid.Row="0"
+                              Content="Prefix-Ersetzung aktivieren"
+                              IsChecked="{Binding Options.EnablePrefixReplacement}"
+                              Style="{StaticResource BootstrapCheckBoxStyle}"
+                              Margin="0,0,0,15"/>
+
+                    <!-- Einstellungen (nur wenn aktiviert) -->
+                    <Grid Grid.Row="1" 
+                          Visibility="{Binding Options.EnablePrefixReplacement, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Gewünschter Prefix -->
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                   Text="Gewünschter Prefix:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,10"/>
+                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 Text="{Binding Options.PrefixText, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,10"/>
+
+                        <!-- Suchmuster -->
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                   Text="Zu ersetzendes Muster:"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,10,10"/>
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                                 Text="{Binding Options.PrefixSearchPattern, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,10"/>
+
+                        <!-- Erklärung -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="Funktionsweise:"
+                                   FontWeight="Bold"
+                                   Margin="0,10,0,5"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,10">
+                            <Run Text="• Wenn der Titel nicht mit '"/>
+                            <Run Text="{Binding Options.PrefixText}" FontWeight="Bold"/>
+                            <Run Text="' beginnt, wird dieser Prefix vorangestellt."/>
+                            <LineBreak/>
+                            <Run Text="• Wenn der Titel mit '"/>
+                            <Run Text="{Binding Options.PrefixSearchPattern}" FontWeight="Bold"/>
+                            <Run Text="' beginnt, wird dies durch '"/>
+                            <Run Text="{Binding Options.PrefixText}" FontWeight="Bold"/>
+                            <Run Text="' ersetzt."/>
+                        </TextBlock>
+                    </Grid>
+
+                    <!-- Beispiel -->
+                    <GroupBox Grid.Row="4"
+                              Header="Beispiele"
+                              Style="{StaticResource BootstrapGroupBoxStyle}"
+                              Visibility="{Binding Options.EnablePrefixReplacement, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel>
+                            <TextBlock Margin="5">
+                                <Run Text="Original: "/>
+                                <Run Text="'Advanced Programming'" FontStyle="Italic"/>
+                                <Run Text=" → "/>
+                                <Run Text="'Make - Advanced Programming'" FontWeight="Bold"/>
+                            </TextBlock>
+                            <TextBlock Margin="5">
+                                <Run Text="Original: "/>
+                                <Run Text="'Make Programming'" FontStyle="Italic"/>
+                                <Run Text=" → "/>
+                                <Run Text="'Make - Programming'" FontWeight="Bold"/>
+                            </TextBlock>
+                            <TextBlock Margin="5">
+                                <Run Text="Original: "/>
+                                <Run Text="'Make - Complete Guide'" FontStyle="Italic"/>
+                                <Run Text=" → "/>
+                                <Run Text="'Make - Complete Guide'" FontWeight="Bold"/>
+                                <Run Text=" (unverändert)"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="3" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <Button Content="OK"
+                    Click="OkButton_Click"
+                    Style="{StaticResource SuccessButtonStyle}"
+                    Width="80"
+                    Margin="0,0,10,0"
+                    IsDefault="True"/>
+            <Button Content="Abbrechen"
+                    Click="CancelButton_Click"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Width="80"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

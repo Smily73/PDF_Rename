@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PDFRename.Models;
 using PDFRename.Services;
+using PDFRename.Views;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -30,6 +31,9 @@ namespace PDFRename.ViewModels
 
         [ObservableProperty]
         private int processedFiles = 0;
+
+        [ObservableProperty]
+        private RenameOptions renameOptions = new();
 
         public List<ProcessingMode> AvailableModes { get; } = new()
         {
@@ -122,7 +126,10 @@ namespace PDFRename.ViewModels
                     
                     var title = _metadataService.ExtractTitle(fileItem.OriginalFilePath);
                     fileItem.PdfTitle = title;
-                    fileItem.NewFileName = title;
+                    
+                    // Optionen auf den Titel anwenden
+                    var processedTitle = _renameService.ApplyRenameOptions(title, RenameOptions);
+                    fileItem.NewFileName = processedTitle;
 
                     fileItem.UpdateStatus(FileStatus.Processing, "Benenne um...");
 
@@ -150,7 +157,10 @@ namespace PDFRename.ViewModels
                     
                     var title = _metadataService.ExtractTitle(fileItem.OriginalFilePath);
                     fileItem.PdfTitle = title;
-                    fileItem.NewFileName = title;
+                    
+                    // Optionen auf den Titel anwenden
+                    var processedTitle = _renameService.ApplyRenameOptions(title, RenameOptions);
+                    fileItem.NewFileName = processedTitle;
 
                     fileItem.UpdateStatus(FileStatus.Ready, "Bereit zum Bearbeiten");
                 }
@@ -264,6 +274,31 @@ namespace PDFRename.ViewModels
                 {
                     MessageBox.Show("Ungültiger Dateiname. Bitte verwenden Sie keine ungültigen Zeichen.", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        [RelayCommand]
+        private void ShowOptions()
+        {
+            var dialog = new OptionsDialog(RenameOptions)
+            {
+                Owner = Application.Current.MainWindow
+            };
+            
+            if (dialog.ShowDialog() == true && dialog.WasAccepted)
+            {
+                // Optionen übernehmen
+                RenameOptions = dialog.ViewModel.Options;
+                StatusText = "Optionen wurden aktualisiert";
+                
+                // Alle Dateien neu verarbeiten wenn sie bereits verarbeitet wurden
+                Task.Run(async () =>
+                {
+                    foreach (var item in PdfFiles.Where(f => f.Status == FileStatus.Success || f.Status == FileStatus.Ready))
+                    {
+                        await ReadMetadataOnly(item);
+                    }
+                });
             }
         }
 

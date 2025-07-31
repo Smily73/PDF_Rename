@@ -1,5 +1,6 @@
 using PDFRename.Models;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace PDFRename.Services
 {
@@ -78,6 +79,58 @@ namespace PDFRename.Services
 
             var invalidChars = Path.GetInvalidFileNameChars();
             return !fileName.Any(c => invalidChars.Contains(c));
+        }
+
+        public string ApplyRenameOptions(string originalTitle, RenameOptions options)
+        {
+            if (string.IsNullOrWhiteSpace(originalTitle))
+                return originalTitle;
+
+            string processedTitle = originalTitle;
+
+            // Wort-Ersetzungen anwenden
+            foreach (var replacement in options.WordReplacements)
+            {
+                if (!string.IsNullOrEmpty(replacement.From) && replacement.To != null)
+                {
+                    // Case-insensitive replacement - verwende replacement.To direkt ohne Trim
+                    processedTitle = Regex.Replace(processedTitle, 
+                        Regex.Escape(replacement.From), 
+                        replacement.To, 
+                        RegexOptions.IgnoreCase);
+                }
+            }
+
+            // Prefix-Ersetzung anwenden
+            if (options.EnablePrefixReplacement && !string.IsNullOrEmpty(options.PrefixText))
+            {
+                processedTitle = ApplyPrefixReplacement(processedTitle, options);
+            }
+
+            return processedTitle;
+        }
+
+        private string ApplyPrefixReplacement(string title, RenameOptions options)
+        {
+            // WICHTIG: Kein Trim() verwenden, um Leerzeichen zu erhalten!
+            var prefixText = options.PrefixText ?? string.Empty;
+            var searchPattern = options.PrefixSearchPattern ?? string.Empty;
+
+            // Wenn der Titel bereits mit dem gewünschten Prefix beginnt, nichts ändern
+            if (title.StartsWith(prefixText, StringComparison.OrdinalIgnoreCase))
+            {
+                return title;
+            }
+
+            // Wenn der Titel mit dem Suchmuster beginnt, ersetzen
+            if (!string.IsNullOrEmpty(searchPattern) && 
+                title.StartsWith(searchPattern, StringComparison.OrdinalIgnoreCase))
+            {
+                return prefixText + title.Substring(searchPattern.Length);
+            }
+
+            // Ansonsten den Prefix voranstellen
+            return prefixText + title;
         }
     }
 }
