@@ -1,0 +1,113 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggered auf Tags wie v1.0.0
+  workflow_dispatch:  # Manueller Trigger
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore PDFRename.csproj
+      
+    - name: Build Release
+      run: dotnet build --configuration Release
+      
+    - name: Create Release Package
+      run: |
+        New-Item -ItemType Directory -Force -Path "ReleasePackage"
+        Copy-Item "bin\Release\net8.0-windows\*" -Destination "ReleasePackage" -Recurse
+        Compress-Archive -Path "ReleasePackage\*" -DestinationPath "PDFRename-${{ steps.get_version.outputs.VERSION }}.zip"
+        
+    - name: Get version from tag
+      id: get_version
+      run: |
+        if ($env:GITHUB_REF -match "refs/tags/(.*)") {
+          $version = $matches[1]
+        } else {
+          $version = "dev-build"
+        }
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+      
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        release_name: PDF Rename ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## 🎉 PDF Rename ${{ steps.get_version.outputs.VERSION }}
+          
+          ### 🤖 KI-gestützte Entwicklung
+          Diese Anwendung wurde **ausschließlich mit GitHub Copilot (Claude Sonnet 4)** entwickelt und dient als Referenzprojekt für moderne KI-gestützte Softwareentwicklung.
+          
+          ### ✨ Hauptfeatures
+          - 📄 **Automatische PDF-Umbenennung** basierend auf Dokumentmetadaten
+          - 🎨 **Bootstrap-inspirierte UI** mit modernem, responsivem Design
+          - ⚙️ **Drei Betriebsmodi**: Automatisch, Simulation, manuelle Bearbeitung
+          - 🔧 **Erweiterte Optionen**: Konfigurierbare Wort- und Präfix-Ersetzungen
+          - 🖱️ **Drag & Drop** Funktionalität für einfache Bedienung
+          - 📊 **Status-Tracking** für alle Dateien mit visuellen Indikatoren
+          
+          ### 🛠️ Technische Details
+          - **Framework**: .NET 8.0 WPF mit MVVM-Pattern
+          - **PDF-Engine**: PdfSharp 6.0.0 (Open Source)
+          - **UI-Framework**: Bootstrap-inspired XAML Styles
+          - **Architektur**: Vollständig modular mit Dependency Injection
+          
+          ### 💻 Systemanforderungen
+          - **Betriebssystem**: Windows 10/11 (x64)
+          - **Runtime**: .NET 8.0 (muss separat installiert werden)
+          - **Download**: https://dotnet.microsoft.com/download/dotnet/8.0
+          
+          ### 📦 Installation & Verwendung
+          1. **.NET 8.0 Runtime installieren** (falls nicht vorhanden)
+          2. **Download**: `PDFRename-${{ steps.get_version.outputs.VERSION }}.zip` 
+          3. **Entpacken**: ZIP-Datei in gewünschten Ordner entpacken
+          4. **Ausführen**: `PDFRename.exe` starten
+          5. **Verwenden**: PDF-Dateien per Drag & Drop hinzufügen
+          
+          ### 🎯 Anwendungsfälle
+          - Automatische Umbenennung von PDF-Sammlungen
+          - Bereinigung von Dateinamen aus PDF-Metadaten
+          - Batch-Verarbeitung mit konfigurierbaren Regeln
+          - Simulation von Umbenennungen vor tatsächlicher Ausführung
+          
+          ### 📜 Lizenz & Verwendung
+          **MIT License** - Frei verwendbar für kommerzielle und private Zwecke.
+          
+          ### 🔗 Links
+          - **Repository**: [GitHub](https://github.com/Smily73/PDF_Rename)
+          - **Issues**: Bug-Reports und Feature-Requests willkommen
+          - **Documentation**: Vollständiges README mit Screenshots
+          
+          ---
+          
+          **🚀 Erste stabile Version - Produktionsbereit!**
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./PDFRename-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_name: PDFRename-${{ steps.get_version.outputs.VERSION }}.zip
+        asset_content_type: application/zip

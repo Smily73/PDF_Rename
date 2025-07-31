@@ -7,6 +7,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+    
+    <!-- Release Information -->
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <AssemblyTitle>PDF Rename</AssemblyTitle>
+    <Product>PDF Rename</Product>
+    <Company>Logiworx</Company>
+    <Copyright>Copyright © 2025 - MIT License</Copyright>
+    <Description>Moderne WPF-Anwendung zum automatischen Umbenennen von PDF-Dateien basierend auf Metadaten. Entwickelt ausschließlich mit GitHub Copilot (Claude Sonnet 4).</Description>
   </PropertyGroup>
 
   <ItemGroup>

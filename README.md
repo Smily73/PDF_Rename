@@ -110,6 +110,20 @@ PDFRename/
 └── App.xaml/.cs - Application-Einstiegspunkt
 ```
 
+## Installation und Systemanforderungen
+
+### Systemanforderungen
+- Windows 10 oder höher (x64)
+- **.NET 8.0 Runtime** muss installiert sein
+  - Download: https://dotnet.microsoft.com/download/dotnet/8.0
+  - Wählen Sie "Download .NET Desktop Runtime 8.0.x"
+
+### Installation
+1. Laden Sie die ZIP-Datei von der [Releases-Seite](https://github.com/Smily73/PDF_Rename/releases) herunter
+2. Installieren Sie .NET 8.0 Runtime falls noch nicht vorhanden
+3. Entpacken Sie die ZIP-Datei in einen beliebigen Ordner
+4. Führen Sie `PDFRename.exe` aus
+
 ## Verwendung
 
 1. **Anwendung starten**
