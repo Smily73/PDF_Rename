@@ -2,6 +2,16 @@
 
 Eine moderne WPF-Desktop-Anwendung zum automatischen Umbenennen von PDF-Dateien basierend auf den Metadaten des Dokuments.
 
+## 🤖 KI-gestützte Entwicklung
+
+Diese Anwendung wurde **ausschließlich** durch die Verwendung von **GitHub Copilot** erstellt und wird kontinuierlich damit weiterentwickelt. Das Projekt dient zur Sammlung von Erfahrungen im Umgang mit künstlichen Intelligenzen bei der Softwareerstellung.
+
+**Verwendete KI-Modelle:**
+- **GitHub Copilot** (Claude Sonnet 4 basiert) - Für Code-Generierung und -Vervollständigung
+- **GitHub Copilot Chat** - Für interaktive Entwicklungsunterstützung und Problemlösung
+
+Dieses Projekt demonstriert die Möglichkeiten moderner KI-Entwicklungstools bei der Erstellung vollständiger, professioneller Softwarelösungen.
+
 ## Features
 
 ### Moderne Bootstrap-inspirierte Benutzeroberfläche
@@ -35,6 +45,28 @@ Eine moderne WPF-Desktop-Anwendung zum automatischen Umbenennen von PDF-Dateien 
 - **Liste leeren** Funktion
 - **Progress-Bar** während der Verarbeitung
 
+### Erweiterte Konfiguration
+- **Optionen-Dialog** für erweiterte Einstellungen
+- **Wort-Ersetzungen** - Konfigurierbare Liste von Textpaaren für automatische Ersetzungen
+- **Präfix-Ersetzungen** - Spezielle Behandlung von Präfixen am Dateianfang
+- **Standard-Einstellungen** mit Reset-Funktion
+
+## Screenshots
+
+### Hauptfenster
+Das Hauptfenster zeigt die moderne Bootstrap-inspirierte Benutzeroberfläche mit Drag & Drop Funktionalität, Modus-Auswahl und Dateiliste.
+
+![Hauptfenster der Anwendung](Images/screenshot-main-window.png)
+
+### Optionen-Dialog
+Der Optionen-Dialog ermöglicht die Konfiguration von Wort-Ersetzungen und Präfix-Behandlung für eine präzise Steuerung der Dateiumbenennung.
+
+**Wort-Ersetzungen Tab:**
+![Optionen Dialog - Wort-Ersetzungen](Images/screenshot-options-dialog1.png)
+
+**Präfix-Ersetzungen Tab:**
+![Optionen Dialog - Präfix-Ersetzungen](Images/screenshot-options-dialog2.png)
+
 ## Technische Details
 
 ### Architektur
@@ -50,16 +82,26 @@ Eine moderne WPF-Desktop-Anwendung zum automatischen Umbenennen von PDF-Dateien 
 ### Projektstruktur
 ```
 PDFRename/
+├── Images/
+│   ├── AppIcon.png - Anwendungs-Icon
+│   ├── screenshot-main-window.png - Hauptfenster Screenshot
+│   ├── screenshot-options-dialog1.png - Optionen Dialog Screenshot 1
+│   └── screenshot-options-dialog2.png - Optionen Dialog Screenshot 2
 ├── Models/
 │   ├── Enums.cs - ProcessingMode und FileStatus Enumerationen
-│   └── PdfFileItem.cs - Datenmodell für PDF-Dateien
+│   ├── PdfFileItem.cs - Datenmodell für PDF-Dateien
+│   ├── RenameOptions.cs - Konfigurationsmodell für Umbenennungsoptionen
+│   └── WordReplacement.cs - Datenmodell für Wort-Ersetzungen
 ├── Services/
 │   ├── PdfMetadataService.cs - PDF-Metadaten-Extraktion
-│   └── FileRenameService.cs - Datei-Umbenennungslogik
+│   └── FileRenameService.cs - Datei-Umbenennungslogik mit Optionen
 ├── ViewModels/
-│   └── MainViewModel.cs - Haupt-ViewModel mit MVVM Toolkit
+│   ├── MainViewModel.cs - Haupt-ViewModel mit MVVM Toolkit
+│   ├── EditFileNameViewModel.cs - ViewModel für Dateinamens-Bearbeitung
+│   └── OptionsViewModel.cs - ViewModel für Optionen-Dialog
 ├── Views/
-│   └── EditFileNameDialog.xaml/.cs - Dialog zum Bearbeiten von Dateinamen
+│   ├── EditFileNameDialog.xaml/.cs - Dialog zum Bearbeiten von Dateinamen
+│   └── OptionsDialog.xaml/.cs - Dialog für erweiterte Optionen
 ├── Converters/
 │   └── ProcessingModeConverter.cs - Converter für Enum-zu-String
 ├── Styles/
@@ -96,8 +138,10 @@ Die Anwendung ist vollständig modular aufgebaut. Neue Features können einfach 
 
 ## Lizenz
 
-Dieses Projekt verwendet:
+Dieses Projekt steht unter der **MIT-Lizenz**.
+
+### Verwendete Bibliotheken:
 - **PdfSharp** (MIT License)
 - **CommunityToolkit.Mvvm** (MIT License)
 
-Die Anwendung selbst ist Open Source.
+Alle Komponenten sind Open Source und frei verwendbar.
