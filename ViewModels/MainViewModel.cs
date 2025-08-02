@@ -13,6 +13,7 @@ namespace PDFRename.ViewModels
     {
         private readonly PdfMetadataService _metadataService;
         private readonly FileRenameService _renameService;
+        private readonly IOptionsStorageService _optionsStorageService;
 
         [ObservableProperty]
         private ObservableCollection<PdfFileItem> pdfFiles = new();
@@ -33,7 +34,7 @@ namespace PDFRename.ViewModels
         private int processedFiles = 0;
 
         [ObservableProperty]
-        private RenameOptions renameOptions = new();
+        private RenameOptions renameOptions;
 
         public List<ProcessingMode> AvailableModes { get; } = new()
         {
@@ -54,10 +55,16 @@ namespace PDFRename.ViewModels
         public bool ShowProcessButton => SelectedMode == ProcessingMode.EditBeforeRename;
         public bool IsSimulationMode => SelectedMode == ProcessingMode.SimulationMode;
 
-        public MainViewModel()
+        public MainViewModel(PdfMetadataService metadataService, 
+                           FileRenameService renameService, 
+                           IOptionsStorageService optionsStorageService)
         {
-            _metadataService = new PdfMetadataService();
-            _renameService = new FileRenameService();
+            _metadataService = metadataService;
+            _renameService = renameService;
+            _optionsStorageService = optionsStorageService;
+            
+            // Load options
+            renameOptions = _optionsStorageService.LoadOptions();
         }
 
         [RelayCommand]
@@ -289,7 +296,10 @@ namespace PDFRename.ViewModels
             {
                 // Optionen übernehmen
                 RenameOptions = dialog.ViewModel.Options;
-                StatusText = "Optionen wurden aktualisiert";
+                
+                // Save options
+                _optionsStorageService.SaveOptions(RenameOptions);
+                StatusText = "Optionen wurden gespeichert";
                 
                 // Alle Dateien neu verarbeiten wenn sie bereits verarbeitet wurden
                 Task.Run(async () =>

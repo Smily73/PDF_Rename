@@ -9,10 +9,10 @@ namespace PDFRename
     {
         private readonly MainViewModel _viewModel;
 
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
-            _viewModel = new MainViewModel();
+            _viewModel = viewModel;
             DataContext = _viewModel;
         }
 

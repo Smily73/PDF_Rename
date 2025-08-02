@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 
 namespace PDFRename.Models
 {
@@ -12,18 +13,14 @@ namespace PDFRename.Models
         private string prefixText = "Make - ";
 
         [ObservableProperty]
-        private bool enablePrefixReplacement = true;
+        private bool enablePrefixReplacement = false;
 
         [ObservableProperty]
         private string prefixSearchPattern = "Make ";
 
         public RenameOptions()
         {
-            // Standard-Ersetzungen hinzufügen
-            WordReplacements.Add(new WordReplacement { From = "_", To = " " });
-            WordReplacements.Add(new WordReplacement { From = "Volume", To = "Vol." });
-            WordReplacements.Add(new WordReplacement { From = "Chapter", To = "Ch." });
-            WordReplacements.Add(new WordReplacement { From = "Edition", To = "Ed." });
+            // Default constructor for object initialization and JSON deserialization
         }
 
         public RenameOptions Clone()
@@ -56,5 +53,10 @@ namespace PDFRename.Models
 
         [ObservableProperty]
         private string to = string.Empty;
+
+        public WordReplacement()
+        {
+            // Standard-Konstruktor für Object-Initialisierung und JSON-Deserialisierung
+        }
     }
 }

@@ -17,6 +17,12 @@
     <Company>Logiworx</Company>
     <Copyright>Copyright © 2025 - MIT License</Copyright>
     <Description>Moderne WPF-Anwendung zum automatischen Umbenennen von PDF-Dateien basierend auf Metadaten. Entwickelt ausschließlich mit GitHub Copilot (Claude Sonnet 4).</Description>
+    
+    <!-- Publishing Configuration -->
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +32,9 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="PdfSharp" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
