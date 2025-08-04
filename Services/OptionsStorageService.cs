@@ -16,11 +16,6 @@ namespace PDFRename.Services
     {
         private const string OptionsFileName = "PDFRename.options.json";
         private readonly string _optionsFilePath;
-        private static readonly JsonSerializerOptions CachedJsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true
-            // Use default encoder for security. Add Encoder if specifically required.
-        };
         private readonly JsonSerializerOptions _jsonOptions;
 
         public OptionsStorageService()
@@ -38,19 +33,18 @@ namespace PDFRename.Services
                 // Fallback to user directory
                 string userDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 string appDataDirectory = Path.Combine(userDirectory, "PDFRename");
-                
+
                 // Create directory if it doesn't exist
                 if (!Directory.Exists(appDataDirectory))
                 {
                     Directory.CreateDirectory(appDataDirectory);
                 }
-                
+
                 _optionsFilePath = Path.Combine(appDataDirectory, OptionsFileName);
             }
 
             _jsonOptions = new JsonSerializerOptions
             {
-                TypeInfoResolver = System.Text.Json.Serialization.Metadata.DefaultJsonTypeInfoResolver,
                 WriteIndented = true,
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
@@ -79,7 +73,7 @@ namespace PDFRename.Services
             {
                 // Log error when a debugger is attached
                 System.Diagnostics.Debug.WriteLine($"Error loading options: {ex.Message}");
-                
+
                 // Delete corrupted file on severe error
                 try
                 {
@@ -93,11 +87,15 @@ namespace PDFRename.Services
                     // Ignore deletion errors
                 }
             }
+
+            return CreateDefaultOptions();
+        }
+
         public void SaveOptions(RenameOptions options)
         {
             try
             {
-                string json = JsonSerializer.Serialize(options, CachedJsonOptions);
+                string json = JsonSerializer.Serialize(options, _jsonOptions);
                 File.WriteAllText(_optionsFilePath, json);
             }
             catch (Exception ex)
@@ -106,6 +104,8 @@ namespace PDFRename.Services
                 System.Diagnostics.Debug.WriteLine($"Error saving options: {ex.Message}");
             }
         }
+
+        private static bool IsDirectoryWritable(string directoryPath)
         {
             try
             {
@@ -139,5 +139,6 @@ namespace PDFRename.Services
                 PrefixSearchPattern = "Make"
             };
         }
+        
     }
 }
