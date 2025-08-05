@@ -6,7 +6,6 @@
         MinHeight="600" MinWidth="600"
         MaxHeight="800" MaxWidth="900"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="CanResize"
         Icon="../AppIcon.ico">
 
     <Window.Resources>
@@ -232,13 +231,14 @@
             <Button Content="OK"
                     Click="OkButton_Click"
                     Style="{StaticResource SuccessButtonStyle}"
-                    Width="80"
+                    MinWidth="100"
                     Margin="0,0,10,0"
                     IsDefault="True"/>
             <Button Content="Abbrechen"
                     Click="CancelButton_Click"
+                    MinWidth="100"
                     Style="{StaticResource SecondaryButtonStyle}"
-                    Width="80"
+                    
                     IsCancel="True"/>
         </StackPanel>
     </Grid>
