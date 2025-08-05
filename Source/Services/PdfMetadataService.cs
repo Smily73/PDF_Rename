@@ -11,7 +11,7 @@ namespace PDFRename.Services
         {
             try
             {
-                using var document = PdfReader.Open(filePath, PdfDocumentOpenMode.ReadOnly);
+                using var document = PdfReader.Open(filePath, PdfDocumentOpenMode.Import);
                 var title = document.Info.Title;
                 
                 if (string.IsNullOrWhiteSpace(title))
@@ -32,7 +32,7 @@ namespace PDFRename.Services
         {
             try
             {
-                using var document = PdfReader.Open(filePath, PdfDocumentOpenMode.ReadOnly);
+                using var document = PdfReader.Open(filePath, PdfDocumentOpenMode.Import);
                 var info = document.Info;
 
                 return new PdfMetadata

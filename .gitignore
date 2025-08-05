@@ -1,7 +1,4 @@
-bin/
-obj/
+Source/bin/
+Source/obj/
 Release/
-*.user
-*.suo
-*.sln.docstates
-*.vs/
+.vs/
