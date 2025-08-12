@@ -56,16 +56,16 @@ Dieses Projekt demonstriert die Möglichkeiten moderner KI-Entwicklungstools bei
 ### Hauptfenster
 Das Hauptfenster zeigt die moderne Bootstrap-inspirierte Benutzeroberfläche mit Drag & Drop Funktionalität, Modus-Auswahl und Dateiliste.
 
-![Hauptfenster der Anwendung](Images/screenshot-main-window.png)
+![Hauptfenster der Anwendung](Source/Images/screenshot-main-window.png)
 
 ### Optionen-Dialog
 Der Optionen-Dialog ermöglicht die Konfiguration von Wort-Ersetzungen und Präfix-Behandlung für eine präzise Steuerung der Dateiumbenennung.
 
 **Wort-Ersetzungen Tab:**
-![Optionen Dialog - Wort-Ersetzungen](Images/screenshot-options-dialog1.png)
+![Optionen Dialog - Wort-Ersetzungen](Source/Images/screenshot-options-dialog1.png)
 
 **Präfix-Ersetzungen Tab:**
-![Optionen Dialog - Präfix-Ersetzungen](Images/screenshot-options-dialog2.png)
+![Optionen Dialog - Präfix-Ersetzungen](Source/Images/screenshot-options-dialog2.png)
 
 ## Technische Details
 
